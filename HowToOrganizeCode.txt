@@ -1,0 +1,79 @@
+We need to make several new folder and split the code into different catagories.
+
+The follwing task is for two purposes: (i) training your git skills, (ii) help you understand the big picture first.
+
+Taks 1. The following .m files are not important at all. We can make a new folder (maybe name it as "plotFigure", you can decide the name) and whenever you think a function is realated with plotting, just move it to the folder 
+
+WQMC/plotControlActionU_3node.m
+WQMC/plotControlActionU_3node_RBC.m
+WQMC/plotControlActionU_net1.m
+WQMC/plotControlActionU_net1_4days.m
+WQMC/plotControlActionU_net1_4days_double_axis.m
+WQMC/plotDemand.m
+WQMC/plotDemandPipeFlowRate.m
+WQMC/plotDemandPipeFlowRateSeperately.m
+WQMC/plotDemandPipeFlowRateSeperately_3nodes.m
+WQMC/plotDemandPipeFlowRateSeperately_net1.m
+WQMC/plotFlow_net1.m
+WQMC/plotJunction.m
+WQMC/plotLinkConcentrations.m
+WQMC/plotLinkConcentrations_3node.m
+WQMC/plotLinkConcentrations_3node_RBC.m
+WQMC/plotLinkConcentrations_net1.m
+WQMC/plotLinkNodeConcentrations_3node.m
+WQMC/plotMinMaxRange.m
+WQMC/plotMinMaxRange4Junction.m
+WQMC/plotMinMaxRange4Pipe.m
+WQMC/plotNodeConcentrations.m
+WQMC/plotNodeConcentrations_3node.m
+WQMC/plotNodeConcentrations_3node_RBC.m
+WQMC/plotNodeConcentrations_net1.m
+WQMC/plotPipe.m
+WQMC/plotResult_3node.m
+WQMC/plotResult_net1.m
+WQMC/plotShaded.m
+WQMC/PlotRangesShaded.m
+WQMC/Plot_Error_EPANET_LDE_3node_net1.m
+
+
+Task 2. I suggest we move all rule based control code to another new folder "RuleBasedControl"
+
+
+WQMC/Rule1.m
+WQMC/Rule2.m
+WQMC/Rule3.m
+WQMC/Rule4.m
+WQMC/Rule5.m
+WQMC/Rule6.m
+WQMC/Rule7.m
+WQMC/RuleBasedControl.m
+
+
+Task 3. Delete the folowing files from our branch, these are for debugging purpose, we don't need it anymore
+WQMC/example_multispecies.m
+WQMC/CalculateMaxEigenvalueofA.m
+WQMC/Constants4WDN.m
+WQMC/FourNodeContamination.m
+
+
+Task 4. Move these files to "tests" folder 
+
+WQMC/TestLoadMSXFile_3node_inp.m
+WQMC/TestLoadMSXFile_example_inp.m
+WQMC/TestPlotShaded.m
+WQMC/TestQualityAnalysis_2ways.m
+WQMC/TestQualityAnalysis_3node_inp.m
+WQMC/TestQualityStepWise.m
+
+In order to finish the 4 tasks, you will need 
+"git add *.m"
+"git rm thefileyoudeleted.m"
+"git commit -m "message" "
+"git push -u"
+
+So finish Task 1 first, and then submit it to github.
+
+When you finish it, please let me know.
+
+
+
