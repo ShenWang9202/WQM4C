@@ -1,0 +1,8 @@
+
+The big plan is: 1. call EPANET using matlab, 
+2. do EPANET simulation using Matlab, 
+3 understanding LDE model without control, 
+4 comparing LDE and EPANET, 
+5 Add control to LDE model, 
+6 organizing code.
+Each step, you need to add comments based on your understanding, and the 6th step should be considered during Steps 1-5.

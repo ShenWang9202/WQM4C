@@ -1,3 +1,5 @@
+Task: how to use git commands to commit your changes
+
 We need to make several new folder and split the code into different catagories.
 
 The follwing task is for two purposes: (i) training your git skills, (ii) help you understand the big picture first.
@@ -70,10 +72,6 @@ In order to finish the 4 tasks, you will need
 "git rm thefileyoudeleted.m"
 "git commit -m "message" "
 "git push -u"
-
-So finish Task 1 first, and then submit it to github.
-
-When you finish it, please let me know.
 
 
 

@@ -1,0 +1,24 @@
+Task: Familar with EPAENT-Matlab-Tookkit
+
+Task 1. OPen Threenode-cl-2.inp using EPANET software, click run, and observe the solution, including 1. head at each node 2. flow in each link. Pls answer questions below:
+(a) what is the head value at Junction 2 at the 11th minute?
+(b) what is the flow rate in Pipe 1 at the 12th hour?
+
+
+The following 4 tasks are designed for you to understand how EPAENT-Matlab-Tookkit are used to simulate hydraulic and quality simulation.
+
+Task 2. run WQM4C/examples/EX1_Plot_network_topology, and make sure that you start to be familar with the functions in this .m file
+Task 3. run WQM4C/examples/EX2_Hydraulic_analysis, and make sure that you start to be familar with the functions in this .m file
+Task 4. run WQM4C/examples/EX2_Quality_analysis, and make sure that you start to be familar with the functions in this .m file
+Task 4. run WEX14_hydraulic_and_quality_analysis.m, and make sure that you start to be familar with the functions in this .m file
+
+
+Task 5. Do same simulation in Task 1 using Matlab via calling EPAENT-Matlab-Tookkit, and observe the solution variables in Matlab.
+
+To this end,
+
+First, run WQM4C/tests/TestQualityAnalysis_3node_inp.m 
+Second, go to the workspace and observe the matrices Head Flow Q
+Third, find the value of head at Junction 2 at the 11th minute in Head; find the flow rate in Pipe 1 at the 12th hour in Flow
+
+Task 6. Compare the results from EPANET software and Matlab for network Threenode-cl-2.inp, and see if they are exactly the same or not?
