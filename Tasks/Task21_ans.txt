@@ -1,4 +1,6 @@
-Task 1. OPen Threenode-cl-2.inp using EPANET software, click run, and observe the solution, including 1. head at each node 2. flow in each link. Pls answer questions below:
+WARNING: Incorrect answers ahead. 
+
+Task 1. Open Threenode-cl-2.inp using EPANET software, click run, and observe the solution, including 1. head at each node 2. flow in each link. Pls answer questions below:
 (a) what is the head value at Junction 2 at the 11th minute?
 	91.10
 (b) what is the flow rate in Pipe 1 at the 12th hour?
