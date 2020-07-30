@@ -56,15 +56,7 @@ n_deltau = Np*nu;
 %R = 1000*speye(n_deltau,n_deltau); Change this R to change the smoothness
 %of control action.
 R =  speye(n_deltau,n_deltau);
-%R =  sparse(n_deltau,n_deltau);
-% for i = 1:Np
-%     R_i = eye(nu,nu);
-% %     R_i = zeros(nu,nu);
-% %     for j = 1:JunctionCount
-% %         R_i(j,j) = 1; 
-% %     end
-%     R = blkdiag(R, R_i);
-% end
+
 % reference
 n_ref = ny*Np;
 reference = Constants4Concentration.reference;
@@ -72,15 +64,7 @@ reference = reference*ones(n_ref,1);
 % only select the pipes now.
 n_Q = Np*ny;
 Q = speye(n_Q,n_Q);
-% for i = 1:Np
-%     Q_i = eye(ny,ny);
-% %    Q_i = zeros(ny,ny);
-% %     for j = (nodeCount + 1):(nodeCount + NumberofSegment*PipeCount)
-% %         Q_i(j,j) = 1; 
-% %     end
-%     Q = blkdiag(Q, Q_i);
-% end
-% This is just C_B;
+
 
 %DeltaU1 = (R + Z'*Q*Z)^(-1)*Z'*Q*(reference-W*Xa);
 
@@ -92,7 +76,8 @@ end
 Price_Weight = Constants4Concentration.Price_Weight;
 
 %DeltaU = (R + Z'*Q*Z)^(-1)*(Z'*Q*(reference-W*Xa)-Price_Weight*b);
-DeltaU = (R + Z'*Q*Z)\(Z'*Q*(reference-W*Xa)-Price_Weight*b);
+preCal = Z'*Q;
+DeltaU = (R + preCal*Z)\(preCal*(reference-W*Xa)-Price_Weight*b);
 % We reshape it based on the number of nodes.
 [m_Delta,~] = size(DeltaU);
 column = m_Delta/nu;

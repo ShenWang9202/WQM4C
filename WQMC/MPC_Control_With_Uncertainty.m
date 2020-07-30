@@ -64,7 +64,7 @@ switch Network
         % -0.0; initial value: J2 = 0.5 mg/L, J6 = 1.2 mg/L, R1 = 0.8 mg/L;
         % segment = 1000;
         NetworkName = 'tutorial8node1inital.inp';
-%         NetworkName = 'tutorial8node1inital2.inp';
+        %         NetworkName = 'tutorial8node1inital2.inp';
         filename = '8node_1day.mat';
     case 5
         % Quality Timestep = 1 min, and  Global Bulk = -0.5, Global Wall=
@@ -205,11 +205,22 @@ aux = struct('NumberofSegment',NumberofSegment,...
 
 %% Start MPC control
 
-
-QsN_Control = []; QsL_Control = []; NodeSourceQuality = []; T = []; PreviousSystemDynamicMatrix = []; UeachMin = [];
-X_estimated = []; PreviousDelta_t = []; ControlActionU = []; JunctionActualDemand = []; Head = []; Flow = []; XX_estimated = [];
-ControlActionU_LDE = [];
+T = [];
+Head = [];
+Flow = [];
+UeachMin = [];
 Magnitude = [];
+X_estimated = [];
+QsN_Control = [];
+QsL_Control = [];
+XX_estimated = [];
+ControlActionU = [];
+PreviousDelta_t = [];
+NodeSourceQuality = [];
+ControlActionU_LDE = [];
+JunctionActualDemand = [];
+PreviousSystemDynamicMatrix = [];
+
 Hq_min = Constants4Concentration.Hq_min;% I need that all concention 5 minutes later are  in 0.2 mg 4 mg
 SimutionTimeInMinute = Constants4Concentration.SimutionTimeInMinute;
 
@@ -224,10 +235,9 @@ d.openQualityAnalysis;
 d.initializeHydraulicAnalysis;
 d.initializeQualityAnalysis;
 
-tleft=1;
+tleft = 1;
 tInMin = 0;
 delta_t = 0;
-
 
 if DEMAND_UNCERTAINTY
     % load the head, flow, and velocity without uncertainty
@@ -237,7 +247,7 @@ if DEMAND_UNCERTAINTY
 end
 % profile on
 tic
-while (tleft>0 && tInMin < SimutionTimeInMinute && delta_t <= 60)
+while (tleft > 0 && tInMin < SimutionTimeInMinute && delta_t <= 60)
     t1 = d.runHydraulicAnalysis;
     t=d.runQualityAnalysis;
     
@@ -251,7 +261,7 @@ while (tleft>0 && tInMin < SimutionTimeInMinute && delta_t <= 60)
     
     % Calculate Control Action
     tInMin = t/60;
-    if(mod(tInMin,Hq_min)==0)
+    if(mod(tInMin,Hq_min) == 0)
         % 5 miniute is up, Calculate the New Control Action
         disp('Current time')
         tInMin
@@ -273,7 +283,7 @@ while (tleft>0 && tInMin < SimutionTimeInMinute && delta_t <= 60)
         delta_t = LinkLengthPipe./NumberofSegment./CurrentVelocityPipe;
         delta_t = min(delta_t);
         delta_t = MakeDelta_tAsInteger(delta_t)
-
+        
         if DEMAND_UNCERTAINTY
             % Because tInmin starts from 0, but matlab's index is from 1, so we need to add 1 here
             CurrentFlow = FlowWithoutUncertainty(tInMin + 1,:);
@@ -300,7 +310,7 @@ while (tleft>0 && tInMin < SimutionTimeInMinute && delta_t <= 60)
             'delta_t',delta_t,...
             'PipeReactionCoeff',PipeReactionCoeff,...
             'Np',Np);
-
+        
         % Esitmate the concentration in all elements according to the
         % system dynamics each 5 mins
         xx_estimated = EstimateState_XX_SaveMem(CurrentValue,IndexInVar,aux,ElementCount,q_B,tInMin,C0,PreviousValue);
@@ -328,9 +338,9 @@ while (tleft>0 && tInMin < SimutionTimeInMinute && delta_t <= 60)
             % call function
             x_estimated = Hack_x_estimated_ByID(x_estimated,Struct4Hack);
             if Network == 1
-            % Note that for three node, we also need to change the pump's
-            % concnetration since pump = 0.5*(junction + Reservoir)
-            x_estimated(104) = 0.9; % This is only for three-node, comment this for the othre network
+                % Note that for three node, we also need to change the pump's
+                % concnetration since pump = 0.5*(junction + Reservoir)
+                x_estimated(104) = 0.9; % This is only for three-node, comment this for the othre network
             end
             % also update the each minute data to the every-5 minutes data
             xx_estimated(:,5) = x_estimated;
@@ -346,7 +356,7 @@ while (tleft>0 && tInMin < SimutionTimeInMinute && delta_t <= 60)
         
         % Calculate all of the control actions at each min
         [UeachMinforEPANET,U_C_B_eachStep, PreviousSystemDynamicMatrix] = ObtainControlAction(CurrentValue,IndexInVar,aux,ElementCount,q_B,x_estimated,PreviousValue);
-
+        
         % Save Control Actions
         ControlActionU = [ControlActionU; UeachMinforEPANET'];
         % Save Control Actions
@@ -432,10 +442,10 @@ for i = 1:n
     NodeIndex4EachPump = NodeIndex4EachLink(PumpIndex,:);
     NodeIndex4EachValve = NodeIndex4EachLink(ValveIndex,:);
     for ithPump = 1:PumpCount
-            X_Min_Average(PumpIndexInOrder,i) = (X_Min(NodeIndex4EachPump(ithPump,1),i) +  X_Min(NodeIndex4EachPump(ithPump,2),i))*0.5;
+        X_Min_Average(PumpIndexInOrder,i) = (X_Min(NodeIndex4EachPump(ithPump,1),i) +  X_Min(NodeIndex4EachPump(ithPump,2),i))*0.5;
     end
     for ithValve = 1:ValveCount
-            X_Min_Average(ValveIndexInOrder,i) = (X_Min(NodeIndex4EachValve(ithValve,1),i) +  X_Min(NodeIndex4EachValve(ithValve,2),i))*0.5;
+        X_Min_Average(ValveIndexInOrder,i) = (X_Min(NodeIndex4EachValve(ithValve,1),i) +  X_Min(NodeIndex4EachValve(ithValve,2),i))*0.5;
     end
 end
 close all
