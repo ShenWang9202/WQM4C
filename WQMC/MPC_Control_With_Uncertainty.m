@@ -39,7 +39,7 @@ if(COMPARE == 1) % when compare LDE with EPANET, We have to make all uncertainty
 end
 
 Network = 1; % Don't use case 2
-Network = 4; % Don't use case 2
+Network = 7; % Don't use case 2
 switch Network
     case 1
         % Quality Timestep = 1 min, and  Global Bulk = -0.3, Global Wall= -0.0
@@ -137,7 +137,9 @@ switch Network
 end
 NodeID = Variable_Symbol_Table(1:nodeCount,1);
 %[q_B,C_B] = InitialBoosterFlow(nodeCount,Location_B,flowRate_B,NodeID,C_B);
+Price_B1 = Price_B';
 [q_B,Price_B,BoosterLocationIndex,BoosterCount] = InitialBooster(nodeCount,Location_B,flowRate_B,NodeID,Price_B);
+%[q_B,Price_B,BoosterLocationIndex,BoosterCount] = InitialBooster1(Location_B,flowRate_B,NodeID,Price_B);
 
 
 % Get the flow rate and head when use demand without uncertainty
@@ -192,12 +194,14 @@ aux = struct('NumberofSegment',NumberofSegment,...
     'MassEnergyMatrix',MassEnergyMatrix,...
     'flowRate_B',flowRate_B,...
     'q_B',q_B,...
-    'Price_B',Price_B,...
+    'Price_B',Price_B1,...,
+    'BoosterLocationIndex',BoosterLocationIndex,...,
+    'BoosterCount',BoosterCount,...,
     'NodeNameID',{NodeNameID},...
     'LinkNameID',{LinkNameID},...
     'NodesConnectingLinksID',{NodesConnectingLinksID},...
     'COMPARE',COMPARE);
-
+%    'Price_B',Price_B,...,
 
 %% Start MPC control
 
@@ -254,7 +258,6 @@ while (tleft>0 && tInMin < SimutionTimeInMinute && delta_t <= 60)
         tInHour = tInMin/60
         
         if DEMAND_UNCERTAINTY
-            %             CurrentVelocity = d.getLinkVelocity
             CurrentVelocity = VelocityPipeWithoutUncertainty(tInMin + 1,:);
         else
             CurrentVelocity = d.getLinkVelocity;
@@ -272,10 +275,8 @@ while (tleft>0 && tInMin < SimutionTimeInMinute && delta_t <= 60)
         delta_t = MakeDelta_tAsInteger(delta_t)
 
         if DEMAND_UNCERTAINTY
-            %            CurrentFlow = d.getLinkFlows
             % Because tInmin starts from 0, but matlab's index is from 1, so we need to add 1 here
             CurrentFlow = FlowWithoutUncertainty(tInMin + 1,:);
-            %           CurrentHead = d.getNodeHydaulicHead
             CurrentHead = HeadWithoutUncertainty(tInMin + 1,:);
         else
             CurrentFlow = d.getLinkFlows;
@@ -302,7 +303,6 @@ while (tleft>0 && tInMin < SimutionTimeInMinute && delta_t <= 60)
 
         % Esitmate the concentration in all elements according to the
         % system dynamics each 5 mins
-        %[x_estimated,xx_estimated] = EstimateState_XX(CurrentValue,IndexInVar,aux,ElementCount,q_B,tInMin,C0,PreviousValue);
         xx_estimated = EstimateState_XX_SaveMem(CurrentValue,IndexInVar,aux,ElementCount,q_B,tInMin,C0,PreviousValue);
         x_estimated = xx_estimated(:,end);
         % when time = 200 minute, we simuate a disturbance, that is, the
@@ -384,7 +384,7 @@ while (tleft>0 && tInMin < SimutionTimeInMinute && delta_t <= 60)
         %applycounter = applycounter + 1;
         for booster_i = 1:BoosterCount
             indBooster = BoosterLocationIndex(booster_i);
-            SourceQualityValue = TmpNodeSourceQuality(indBooster);
+            SourceQualityValue = TmpNodeSourceQuality(booster_i);
             d.setNodeSourceQuality(indBooster,SourceQualityValue);
         end
     end
@@ -487,14 +487,14 @@ ylabel('Demand at junctions (GPM)')
 legend(NodeID4Legend)
 
 figure
-plot(ControlActionU(:,BoosterLocationIndex))
+plot(ControlActionU)
 legend(Location_B)
 xlabel('Time (minute)')
 ylabel('Mass at boosters (mg/minute)')
 
 
 
-chlorinedose =  sum(sum(ControlActionU(:,BoosterLocationIndex)));
+chlorinedose =  sum(sum(ControlActionU));
 Price_Weight = Constants4Concentration.Price_Weight;
 Price = chlorinedose* Price_Weight;
 

@@ -16,9 +16,13 @@ nodeCount = JunctionCount + ReservoirCount + TankCount;
 flowRate_B = aux.flowRate_B;
 q_B = aux.q_B;
 Price_B = aux.Price_B;
+BoosterLocationIndex = aux.BoosterLocationIndex;
+BoosterCount = aux.BoosterCount;
 
 Np = CurrentValue.Np;
 [A,B,C] = ObtainDynamicNew(CurrentValue,IndexInVar,aux,ElementCount,q_B);
+
+B = B(:,BoosterLocationIndex);
 
 PreviousSystemDynamicMatrix = struct('A',A,...
     'B',B,...
@@ -46,7 +50,8 @@ yk = C*x;
 Deltax = zeros(nx,1);
 Xa = [Deltax;yk];
 % only select the booster location;
-nu = nodeCount;
+% nu = nodeCount;
+nu = BoosterCount;
 n_deltau = Np*nu;
 %R = 1000*speye(n_deltau,n_deltau); Change this R to change the smoothness
 %of control action.
@@ -156,7 +161,8 @@ end
 % flow reate to L/sec first,
 
 % Now the UforEPANET is in mg for each step).
-UforEPANET =  U_C_B_eachStep .* q_B .* Constants4Concentration.Gallon2Liter ./ Constants4Concentration.MinInSecond * delta_t;
+% UforEPANET =  U_C_B_eachStep .* q_B .* Constants4Concentration.Gallon2Liter ./ Constants4Concentration.MinInSecond * delta_t;
+UforEPANET =  U_C_B_eachStep .* flowRate_B' .* Constants4Concentration.Gallon2Liter ./ Constants4Concentration.MinInSecond * delta_t;
 
 
 % Get the prevoius U;
