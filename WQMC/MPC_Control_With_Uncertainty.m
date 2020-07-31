@@ -39,7 +39,7 @@ if(COMPARE == 1) % when compare LDE with EPANET, We have to make all uncertainty
 end
 
 Network = 1; % Don't use case 2
-Network = 7; % Don't use case 2
+Network = 4; % Don't use case 2
 switch Network
     case 1
         % Quality Timestep = 1 min, and  Global Bulk = -0.3, Global Wall= -0.0
@@ -222,13 +222,14 @@ JunctionActualDemand = [];
 PreviousSystemDynamicMatrix = [];
 
 Hq_min = Constants4Concentration.Hq_min;% I need that all concention 5 minutes later are  in 0.2 mg 4 mg
+T_booster_min = Constants4Concentration.T_booster_min; % Booster station inject chlorin each 2 minutes.
 SimutionTimeInMinute = Constants4Concentration.SimutionTimeInMinute;
 
 PreviousValue = struct('PreviousDelta_t',PreviousDelta_t,...
     'PreviousSystemDynamicMatrix',PreviousSystemDynamicMatrix,...
     'X_estimated',X_estimated,...
     'U_C_B_eachStep',0,...
-    'UeachMinforEPANET',0);
+    'UeachIntervalforEPANET',0);
 
 d.openHydraulicAnalysis;
 d.openQualityAnalysis;
@@ -355,10 +356,10 @@ while (tleft > 0 && tInMin < SimutionTimeInMinute && delta_t <= 60)
         
         
         % Calculate all of the control actions at each min
-        [UeachMinforEPANET,U_C_B_eachStep, PreviousSystemDynamicMatrix] = ObtainControlAction(CurrentValue,IndexInVar,aux,ElementCount,q_B,x_estimated,PreviousValue);
+        [UeachIntervalforEPANET,U_C_B_eachStep, PreviousSystemDynamicMatrix] = ObtainControlAction(CurrentValue,IndexInVar,aux,ElementCount,q_B,x_estimated,PreviousValue);
         
         % Save Control Actions
-        ControlActionU = [ControlActionU; UeachMinforEPANET'];
+        ControlActionU = [ControlActionU; UeachIntervalforEPANET'];
         % Save Control Actions
         ControlActionU_LDE = [ControlActionU_LDE; U_C_B_eachStep'];
         PreviousDelta_t = [PreviousDelta_t delta_t];
@@ -368,7 +369,7 @@ while (tleft > 0 && tInMin < SimutionTimeInMinute && delta_t <= 60)
         PreviousValue.PreviousSystemDynamicMatrix = PreviousSystemDynamicMatrix;
         PreviousValue.X_estimated = xx_estimated(:,end);
         PreviousValue.U_C_B_eachStep = U_C_B_eachStep;
-        PreviousValue.UeachMinforEPANET = UeachMinforEPANET;
+        PreviousValue.UeachIntervalforEPANET = UeachIntervalforEPANET;
         % find the maxium Eigenvalue of A matrix each 5 minutes, only do
         % this which applying control action to speed up these process,
         % otherwise it will take long time to run
@@ -379,18 +380,16 @@ while (tleft > 0 && tInMin < SimutionTimeInMinute && delta_t <= 60)
     end
     
     % Apply Control action
-    if(tInMin > 0 && ~COMPARE)
+    if(tInMin > 0 && ~COMPARE && mod(tInMin,T_booster_min) == 0)
         % Set booster type as mass booster
         for booster_i = 1:BoosterCount
             d.setNodeSourceType(BoosterLocationIndex(booster_i),'MASS'); %Junction2's index is 1; we set it as mass booster
         end
-        %     SourcePattern = d.getNodeSourcePatternIndex;
-        %     SourcePattern = [3 0 0]; % set the third pattern
-        %     d.setNodeSourcePatternIndex(SourcePattern);
-        %     d.getNodeSourcePatternIndex
+
         TmpNodeSourceQuality = d.getNodeSourceQuality;
         NodeSourceQuality = [NodeSourceQuality; TmpNodeSourceQuality];
-        TmpNodeSourceQuality = ControlActionU(tInMin,:); %1 is the index of junction 2
+        intervalIndex = tInMin/T_booster_min;
+        TmpNodeSourceQuality = ControlActionU(intervalIndex,:)/T_booster_min; %1 is the index of junction 2
         %applycounter = applycounter + 1;
         for booster_i = 1:BoosterCount
             indBooster = BoosterLocationIndex(booster_i);
