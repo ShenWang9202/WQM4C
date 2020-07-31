@@ -6,7 +6,7 @@ classdef Constants4Concentration
         SimutionTimeInMinute = 24*60; %Simulate three-node for 1 day
         %SimutionTimeInMinute = 4*24*60; % Simulate Net1 for 4 day
         SimutionTimeInMinute4RBC = 24*60;  %Simulate three-node (rule based control) for 1 day
-        Hq_min = 5;
+        Hq_min = 10;
         DayInSecond = 86400;
         MinInSecond = 60;
         NumberofSegment = 100;

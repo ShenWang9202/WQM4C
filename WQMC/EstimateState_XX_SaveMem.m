@@ -60,11 +60,5 @@ else
         end
         
     end
-    %     IndexofApplyingU = [];
-    %     for i = 1:Hq_min
-    %         IndexofApplyingU = [IndexofApplyingU round(i * Constants4Concentration.MinInSecond/Previous_delta_t)];
-    %     end
-    %     % Save the value at each minute
-    %     XX = XX(:,IndexofApplyingU);
 end
 end

@@ -58,7 +58,7 @@ switch Network
         NetworkName = 'tutorial8node.inp';
     case 3
         % Quality Timestep = 1 min, and  Global Bulk = -0.3, Global Wall= -0.0
-        NetworkName = 'tutorial8node1.inp';
+        NetworkName = 'tutorial8nodeTimeScale.inp';
     case 4
         % Quality Timestep = 1 min, and  Global Bulk = -0.3, Global Wall=
         % -0.0; initial value: J2 = 0.5 mg/L, J6 = 1.2 mg/L, R1 = 0.8 mg/L;

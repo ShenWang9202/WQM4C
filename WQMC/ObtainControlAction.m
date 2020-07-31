@@ -28,19 +28,8 @@ PreviousSystemDynamicMatrix = struct('A',A,...
     'B',B,...
     'C',C);
 
-
 % MPC data
-[W,Z,Ca,PhiA,GammaA] = MPCScale(A,B,C,Np);
-% size(W)
-% size(Z)
-% size(Ca)
-% size(PhiA)
-% size(GammaA)
-% full(W)
-% full(Z)
-% full(Ca)
-% full(PhiA)
-% full(GammaA)
+[W,Z,~,~,~] = MPCScale(A,B,C,Np);
 
 % Xa = [Delta x;y]
 x = x_estimated; 

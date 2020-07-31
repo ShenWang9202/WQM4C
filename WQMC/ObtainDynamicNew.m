@@ -19,8 +19,6 @@ CurrentFlow = CurrentFlow';
 CurrentFlowWithDirection = CurrentFlow;
 MassEnergyMatrixWithDirection = aux.MassEnergyMatrix;
 
-
-
 PipeFlow = CurrentFlow(IndexInVar.PipeIndex);
 NegativePipeIndex = find(PipeFlow<0);
 linkCount = ElementCount.PipeCount +  ElementCount.PumpCount +  ElementCount.ValveCount;
